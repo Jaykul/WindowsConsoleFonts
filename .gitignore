@@ -1,0 +1,6 @@
+.vs/
+.vscode/
+[0-9]*/
+bin/
+lib/
+obj/

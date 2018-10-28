@@ -1,0 +1,30 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>netstandard2.0;net461;net472;</TargetFrameworks>
+    <DebugType>embedded</DebugType>
+    <RootNamespace>PoshCode.ConsoleFonts</RootNamespace>
+    <Authors>Joel Bennett</Authors>
+    <Company>PoshCode</Company>
+    <PackageProjectUrl>https://github.com/Jaykul/WindowsConsoleFonts</PackageProjectUrl>
+    <PackageLicenseUrl>https://github.com/Jaykul/WindowsConsoleFonts/blob/master/LICENSE</PackageLicenseUrl>
+    <Copyright>Copyright 2018 Joel Bennett</Copyright>
+    <PackageIconUrl>https://github.com/Jaykul/WindowsConsoleFonts/blob/resources/logo.png?raw=true</PackageIconUrl>
+    <PackageTags>Console, Windows, Fonts</PackageTags>
+    <AssemblyVersion>0.1.0.0</AssemblyVersion>
+    <FileVersion>0.1.0.0</FileVersion>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|netstandard2.0|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.Drawing.Common" Version="4.5.0" />
+    <PackageReference Include="PowerShellStandard.Library" Version="5.1.0-RC1">
+      <IncludeAssets>Compile</IncludeAssets>
+      <ExcludeAssets>Runtime</ExcludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+</Project>
