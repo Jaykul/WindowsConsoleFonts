@@ -13,8 +13,11 @@ namespace PoshCode.ConsoleFonts
 
         public static FontInfo GetCurrentFont()
         {
-            FontInfo info = new FontInfo();
-            info.cbSize = Marshal.SizeOf<FontInfo>();
+            FontInfo info = new FontInfo
+            {
+                cbSize = Marshal.SizeOf<FontInfo>()
+            };
+
             // First determine whether there's already a TrueType font.
             if (GetCurrentConsoleFontEx(ConsoleOutputHandle, true, ref info))
             {
@@ -23,14 +26,16 @@ namespace PoshCode.ConsoleFonts
             else
             {
                 var er = Marshal.GetLastWin32Error();
-                Console.WriteLine("Read error " + er);
-                throw new System.ComponentModel.Win32Exception(er);
+                throw new System.ComponentModel.Win32Exception(er, "Error getting the console font");
             }
         }
 
         public static FontInfo[] SetCurrentFont(string font, short fontSize = 0, int fontWeight = 400)
         {
-            Console.WriteLine("Set Current Font: " + font + ", " + fontSize + ", "  + fontWeight);
+            if(font.Length > 32) {
+                throw new ArgumentOutOfRangeException("font", font, "Console font name has a maximum length of 32 characters");
+            }
+
             // This requires you to have the font named according to it's font name?
             if (System.IO.File.Exists(font))
             {
@@ -52,11 +57,6 @@ namespace PoshCode.ConsoleFonts
 
             if (GetCurrentConsoleFontEx(ConsoleOutputHandle, false, ref before))
             {
-                if (font.Length > 32)
-                {
-                    Console.WriteLine("Font name must be less than 32 characters. Attempting to set Font: " + font);
-                }
-
                 FontInfo set = new FontInfo
                 {
                     cbSize = Marshal.SizeOf<FontInfo>(),
@@ -66,15 +66,12 @@ namespace PoshCode.ConsoleFonts
                     FontWeight = fontWeight,
                     FontSize = fontSize > 0 ? fontSize : before.FontSize
                 };
-                //IntPtr ptr = new IntPtr(info.FontName);
-                //Marshal.Copy(font.ToCharArray(), 0, ptr, font.Length);
 
                 // Get some settings from current font.
                 if (!SetCurrentConsoleFontEx(ConsoleOutputHandle, false, ref set))
                 {
                     var ex = Marshal.GetLastWin32Error();
-                    Console.WriteLine("Set error " + ex);
-                    throw new System.ComponentModel.Win32Exception(ex);
+                    throw new System.ComponentModel.Win32Exception(ex, "Error setting the console font");
                 }
 
                 FontInfo after = new FontInfo
@@ -88,8 +85,7 @@ namespace PoshCode.ConsoleFonts
             else
             {
                 var er = Marshal.GetLastWin32Error();
-                Console.WriteLine("Get error " + er);
-                throw new System.ComponentModel.Win32Exception(er);
+                throw new System.ComponentModel.Win32Exception(er, "Error getting the console font");
             }
         }
     }

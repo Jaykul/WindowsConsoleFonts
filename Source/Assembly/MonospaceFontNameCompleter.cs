@@ -12,8 +12,8 @@ namespace PoshCode.ConsoleFonts
     public class MonospaceFontNameCompleter : IArgumentCompleter
     {
         public IEnumerable<CompletionResult> CompleteArgument(string commandName, string parameterName, string wordToComplete, CommandAst commandAst, IDictionary fakeBoundParameters)
-        {            
-            return GetMonospaceFonts().Where(name => name.Trim('"',' ','\t').StartsWith(wordToComplete, StringComparison.OrdinalIgnoreCase)).Select(name => new CompletionResult(name.Contains(' ') ? $"\"{name}\"": name));
+        {
+            return GetMonospaceFonts().Where(name => name.StartsWith(wordToComplete.Trim('"', ' ', '\t'), StringComparison.OrdinalIgnoreCase)).Select(name => new CompletionResult(name.Contains(' ') ? $"\"{name}\"": name));
         }
 
         private static IEnumerable<string> GetAvailableFonts(bool monospace)
