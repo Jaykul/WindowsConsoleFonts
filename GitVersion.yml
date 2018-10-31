@@ -1,0 +1,18 @@
+mode: ContinuousDeployment
+next-version: 1.0.0
+assembly-versioning-scheme: 'MajorMinorPatchTag'
+assembly-informational-format: '{NuGetVersionV2}+Sha.{Sha}.Date.{CommitDate}'
+commit-message-incrementing: MergeMessageOnly
+branches:
+  develop:
+    tag: alpha
+  master:
+    tag: beta
+    increment: Minor
+  features?[/-]:
+    increment: Minor
+  releases?[/-]:
+    increment: None
+
+ignore:
+  sha: []

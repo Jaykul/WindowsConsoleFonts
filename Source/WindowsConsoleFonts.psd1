@@ -1,13 +1,13 @@
 @{
     # The module version should be SemVer.org compatible
-    ModuleVersion           = '0.1.0'
+    ModuleVersion           = '1.0.0'
 
     # PrivateData is where all third-party metadata goes
     PrivateData = @{
         # PrivateData.PSData is the PowerShell Gallery data
         PSData = @{
             # Prerelease string of this module
-            Prerelease      = '-beta03'
+            Prerelease      = '-beta04'
 
             # ReleaseNotes of this module
             ReleaseNotes    = '
@@ -28,28 +28,10 @@
         } # End of PSData
     } # End of PrivateData
     # Script module or binary module file associated with this manifest.
-    RootModule              = @(
-        if($PSEdition -eq "Core") {
-            "lib\netstandard2.0\WindowsConsoleFonts.dll"
-        } else {
-            "lib\net472\WindowsConsoleFonts.dll"
-        }
-    )
-
-# Processor architecture (None, X86, Amd64) required by this module
-# ProcessorArchitecture = ''
-
-# Modules that must be imported into the global environment prior to importing this module
-# RequiredModules = @()
-
-# Assemblies that must be loaded prior to importing this module
-# RequiredAssemblies = @()
-
-# Script files (.ps1) that are run in the caller's environment prior to importing this module.
-# ScriptsToProcess = @()
+    RootModule              = "lib\WindowsConsoleFonts.dll"
 
     # Name of the PowerShell host required by this module
-    PowerShellHostName = 'ConsoleHost'
+    PowerShellHostName      = 'ConsoleHost'
     # Minimum version of the PowerShell host required by this module
     # PowerShellHostVersion = ''
 
@@ -72,7 +54,7 @@
     PowerShellVersion       = '5.1'
     CompatiblePSEditions    = @('Core','Desktop')
     # Minimum version of Microsoft .NET Framework required by this module. This prerequisite is valid for the PowerShell Desktop edition only.
-    DotNetFrameworkVersion = '4.7.2'
+    DotNetFrameworkVersion  = '4.7.2'
     # Minimum version of the common language runtime (CLR) required by this module. This prerequisite is valid for the PowerShell Desktop edition only.
     # CLRVersion = ''
 }
