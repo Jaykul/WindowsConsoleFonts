@@ -11,11 +11,11 @@ namespace PoshCode.ConsoleFonts
     {
         private static readonly IntPtr ConsoleOutputHandle = GetStdHandle(StandardOutputHandle);
 
-        public static FontInfo GetCurrentFont()
+        public static ConsoleFont GetCurrentFont()
         {
-            FontInfo info = new FontInfo
+            ConsoleFont info = new ConsoleFont
             {
-                cbSize = Marshal.SizeOf<FontInfo>()
+                cbSize = Marshal.SizeOf<ConsoleFont>()
             };
 
             // First determine whether there's already a TrueType font.
@@ -30,7 +30,7 @@ namespace PoshCode.ConsoleFonts
             }
         }
 
-        public static FontInfo[] SetCurrentFont(string font, short fontSize = 0, int fontWeight = 400)
+        public static ConsoleFont[] SetCurrentFont(string font, short fontSize = 0, int fontWeight = 400)
         {
             if(font.Length > 32) {
                 throw new ArgumentOutOfRangeException("font", font, "Console font name has a maximum length of 32 characters");
@@ -43,23 +43,23 @@ namespace PoshCode.ConsoleFonts
                 PostMessage((IntPtr)0xffff, 0x1D); // font change
 
                 font = System.IO.Path.GetFileNameWithoutExtension(font).Split('-')[0];
-                font = MonospaceFontNameCompleter.GetMonospaceFonts(true).FirstOrDefault(name => name.Contains(font)) ?? font;
+                font = Fonts.FontFamily.Console.FirstOrDefault(family => family.Name.Contains(font)).Name ?? font;
             }
             else
             {
-                font = MonospaceFontNameCompleter.GetMonospaceFonts().FirstOrDefault(name => name.Contains(font)) ?? font;
+                font = Fonts.FontFamily.Console.FirstOrDefault(family => family.Name.Contains(font)).Name ?? font;
             }
 
-            FontInfo before = new FontInfo
+            ConsoleFont before = new ConsoleFont
             {
-                cbSize = Marshal.SizeOf<FontInfo>()
+                cbSize = Marshal.SizeOf<ConsoleFont>()
             };
 
             if (GetCurrentConsoleFontEx(ConsoleOutputHandle, false, ref before))
             {
-                FontInfo set = new FontInfo
+                ConsoleFont set = new ConsoleFont
                 {
-                    cbSize = Marshal.SizeOf<FontInfo>(),
+                    cbSize = Marshal.SizeOf<ConsoleFont>(),
                     FontIndex = 0,
                     FontFamily = FixedWidthTrueType, // TMPF_TRUETYPE; 0 = FF_DONTCARE?
                     FontName = font,
@@ -74,9 +74,9 @@ namespace PoshCode.ConsoleFonts
                     throw new System.ComponentModel.Win32Exception(ex, "Error setting the console font");
                 }
 
-                FontInfo after = new FontInfo
+                ConsoleFont after = new ConsoleFont
                 {
-                    cbSize = Marshal.SizeOf<FontInfo>()
+                    cbSize = Marshal.SizeOf<ConsoleFont>()
                 };
                 GetCurrentConsoleFontEx(ConsoleOutputHandle, false, ref after);
 

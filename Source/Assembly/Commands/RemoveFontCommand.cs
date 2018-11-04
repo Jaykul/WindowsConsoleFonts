@@ -44,7 +44,7 @@ namespace PoshCode.Fonts.Commands
         protected override void EndProcessing()
         {
             base.EndProcessing();
-            MonospaceFontNameCompleter.RefreshFonts();
+            FontFamily.ClearCache();
         }
     }
 }

@@ -17,7 +17,7 @@ namespace PoshCode.ConsoleFonts.Commands
             base.EndProcessing();
             if (ListAvailable.ToBool())
             {
-                WriteObject(MonospaceFontNameCompleter.GetMonospaceFonts(), true);
+                WriteObject(PoshCode.Fonts.FontFamily.Console, true);
             }
             else
             {

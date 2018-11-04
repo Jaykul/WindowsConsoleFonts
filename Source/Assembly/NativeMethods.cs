@@ -10,11 +10,11 @@ namespace PoshCode.ConsoleFonts
 
         [return: MarshalAs(UnmanagedType.Bool)]
         [DllImport("kernel32.dll", SetLastError = true, CharSet = CharSet.Unicode)]
-        internal static extern bool SetCurrentConsoleFontEx(IntPtr hConsoleOutput, bool MaximumWindow, ref FontInfo ConsoleCurrentFontEx);
+        internal static extern bool SetCurrentConsoleFontEx(IntPtr hConsoleOutput, bool MaximumWindow, ref ConsoleFont ConsoleCurrentFontEx);
 
         [return: MarshalAs(UnmanagedType.Bool)]
         [DllImport("kernel32.dll", SetLastError = true, CharSet = CharSet.Unicode)]
-        internal static extern bool GetCurrentConsoleFontEx(IntPtr hConsoleOutput, bool MaximumWindow, ref FontInfo ConsoleCurrentFontEx);
+        internal static extern bool GetCurrentConsoleFontEx(IntPtr hConsoleOutput, bool MaximumWindow, ref ConsoleFont ConsoleCurrentFontEx);
 
         // internal static extern bool SetConsoleIcon(IntPtr hIcon);
 
@@ -36,7 +36,7 @@ namespace PoshCode.ConsoleFonts
         internal static readonly int FONTCHANGE = 0x1D;
 
         [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
-        public struct FontInfo
+        public struct ConsoleFont
         {
             internal int cbSize;
             public int FontIndex;
