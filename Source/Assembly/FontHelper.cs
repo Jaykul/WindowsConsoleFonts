@@ -12,9 +12,7 @@ namespace PoshCode.Fonts {
         public bool Fixed { get; private set; }
         public bool Modern { get; private set; }
         public FontType FontType { get; set; }
-
-        internal bool Monospace { get; set; }
-
+        public bool Monospace { get; set; }
         public string FullName { get; private set; }
         public string Script { get; private set; }
 
@@ -44,17 +42,22 @@ namespace PoshCode.Fonts {
 
         public static List<FontFamily> All => _fonts.Count > 0 ? _fonts : GetFonts();
 
-        public static IEnumerable<FontFamily> Console => All.Where(f => f.Fixed && f.Modern && f.FontType == FontType.PostScript);
+        public static IEnumerable<FontFamily> Console => All.Where(f => f.Fixed && f.Modern && f.FontType == FontType.TrueType && f.Name.Length <= 32);
 
-        public static IEnumerable<FontFamily> Monospaced => All.Where(f => f.Fixed || f.Monospace);
+        public static IEnumerable<FontFamily> TrueType => All.Where(f => f.FontType == FontType.TrueType);
+
+        public static IEnumerable<FontFamily> Monospaced => All.Where(f => (f.Fixed || f.Monospace));
 
         public static bool PseudoMonoSpaced
         {
             get => _testMonoSpaced;
             set
             {
+                if(_testMonoSpaced != value)
+                {
+                    _fonts.Clear();
+                }
                 _testMonoSpaced = value;
-                _fonts.Clear();
             }
         }
 
@@ -63,8 +66,11 @@ namespace PoshCode.Fonts {
             get => _characterSet;
             set
             {
+                if (_characterSet != value)
+                {
+                    _fonts.Clear();
+                }
                 _characterSet = value;
-                _fonts.Clear();
             }
         }
 
@@ -94,20 +100,21 @@ namespace PoshCode.Fonts {
                             result = EnumFontFamiliesEx(ptr, fontPointer, callback, IntPtr.Zero, 0);
 
                             _fonts = _fonts.OrderBy(f => f.Name).ToList();
-                            if (_testMonoSpaced)
-                            {
-                                foreach (var family in _fonts)
-                                {
-                                    using (var font = new Font(family.Name, 10))
-                                    {
-                                        family.Monospace = g.MeasureString("iii", font).Width.Equals(g.MeasureString("WWW", font).Width);
-                                    }
-                                }
-                            }
                         }
                         finally
                         {
                             g.ReleaseHdc(ptr);
+                        }
+
+                        if (_testMonoSpaced)
+                        {
+                            foreach (var family in _fonts)
+                            {
+                                using (var font = new Font(family.Name, 20))
+                                {
+                                    family.Monospace = g.MeasureString("iii", font).Width.Equals(g.MeasureString("WWW", font).Width);
+                                }
+                            }
                         }
                     }
                 }
@@ -132,18 +139,21 @@ namespace PoshCode.Fonts {
                     uint dwFlags);
 
 
-        private delegate int EnumFontExDelegate(ref FontCallbackInfo lpelfe, ref FullTextMetric lpntme, int FontType, int lParam);
+        private delegate int EnumFontExDelegate(ref FontCallbackInfo callbackInfo, ref FullTextMetric textMetric, int FontType, int lParam);
 
-        private static int EnumFontCallback(ref FontCallbackInfo lpelfe, ref FullTextMetric lpntme, int fontType, int lParam)
+        private static int EnumFontCallback(ref FontCallbackInfo fontInfo, ref FullTextMetric textMetric, int fontType, int lParam)
         {
             try
             {
-                if (fontType != 2 && fontType != 4)
+                if (!fontInfo.LogicalFont.Name.StartsWith("@"))
                 {
-                    fontType = (int)FontType.Unknown;
-                }
+                    if (fontType != 2 && fontType != 4)
+                    {
+                        fontType = (int)FontType.Unknown;
+                    }
 
-                _fonts.Add(new FontFamily(lpelfe, lpntme, (FontType)fontType));
+                    _fonts.Add(new FontFamily(fontInfo, textMetric, (FontType)fontType));
+                }
             }
             catch (Exception e)
             {

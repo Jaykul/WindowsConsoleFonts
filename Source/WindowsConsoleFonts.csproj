@@ -11,8 +11,8 @@
     <PackageIconUrl>https://github.com/Jaykul/WindowsConsoleFonts/blob/resources/logo.png?raw=true</PackageIconUrl>
     <PackageTags>Console, Windows, Fonts</PackageTags>
     <VersionPrefix>1.0.0</VersionPrefix>
-    <VersionSuffix>beta.2</VersionSuffix>
-    <InformationalVersion>1.0.0-beta0002+Sha.32836a1c931983f22005c430b8b2a93eb821e23e.Date.2018-10-31</InformationalVersion>
+    <VersionSuffix>beta.3</VersionSuffix>
+    <InformationalVersion>1.0.0-beta0003+Sha.f766ec5a7a3b9b7112eca3b836610fd8f1d6d207.Date.2018-11-04</InformationalVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|netstandard2.0|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>
