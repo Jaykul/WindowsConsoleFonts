@@ -29,7 +29,7 @@
     } # End of PrivateData
     # Script module or binary module file associated with this manifest.
     RootModule              = "lib\WindowsConsoleFonts.dll"
-
+    FormatsToProcess        = "Format.ps1xml"
     # Name of the PowerShell host required by this module
     PowerShellHostName      = 'ConsoleHost'
     # Minimum version of the PowerShell host required by this module

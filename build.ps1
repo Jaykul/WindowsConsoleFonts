@@ -14,7 +14,7 @@ try {
         $PSBoundParameters["SemVer"] = $gitversion.InformationalVersion
 
         foreach($proj in Get-ChildItem -Recurse -Filter *.csproj) {
-            [xml]$doc = Get-Content $proj
+            [xml]$doc = Get-Content $proj.FullName
             $doc.Project.SelectSingleNode("//VersionPrefix").InnerText = $gitversion.MajorMinorPatch
             $doc.Project.SelectSingleNode("//VersionSuffix").InnerText = $gitversion.PreReleaseTag
             $doc.Project.SelectSingleNode("//InformationalVersion").InnerText = $gitversion.InformationalVersion
