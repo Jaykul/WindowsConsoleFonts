@@ -4,15 +4,17 @@ assembly-versioning-scheme: 'MajorMinorPatchTag'
 assembly-informational-format: '{NuGetVersionV2}+Sha.{Sha}.Date.{CommitDate}'
 commit-message-incrementing: MergeMessageOnly
 branches:
-  develop:
-    tag: alpha
   master:
     tag: beta
     increment: Minor
-  features?[/-]:
+  feature:
+    regex: features?[/-]
     increment: Minor
-  releases?[/-]:
-    increment: None
+  release:
+    tag: rc
+    regex: releases?[/-]
+    increment: Patch
+    is-release-branch: true
 
 ignore:
   sha: []

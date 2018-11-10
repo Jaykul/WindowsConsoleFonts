@@ -9,17 +9,17 @@ param(
 )
 Push-Location $PSScriptRoot -StackName BuildWindowsConsoleFont
 try {
-    if(!$SemVer -and (Get-Command gitversion)) {
+    if(!$SemVer -and (Get-Command gitversion -ErrorAction SilentlyContinue)) {
         $gitversion = gitversion | ConvertFrom-Json
-        $PSBoundParameters["SemVer"] = $gitversion.InformationalVersion
+        $SemVer = $PSBoundParameters["SemVer"] = $gitversion.InformationalVersion
+    }
 
-        foreach($proj in Get-ChildItem -Recurse -Filter *.csproj) {
-            [xml]$doc = Get-Content $proj.FullName
-            $doc.Project.SelectSingleNode("//VersionPrefix").InnerText = $gitversion.MajorMinorPatch
-            $doc.Project.SelectSingleNode("//VersionSuffix").InnerText = $gitversion.PreReleaseTag
-            $doc.Project.SelectSingleNode("//InformationalVersion").InnerText = $gitversion.InformationalVersion
-            $doc.Save($proj.FullName)
-        }
+    foreach($proj in Get-ChildItem -Recurse -Filter *.csproj) {
+        [xml]$doc = Get-Content $proj.FullName
+        $doc.Project.SelectSingleNode("//VersionPrefix").InnerText = $SemVer.Split("+")[0].Split("-")[0]
+        $doc.Project.SelectSingleNode("//VersionSuffix").InnerText = $SemVer.Split("+")[0].Split("-")[1]
+        $doc.Project.SelectSingleNode("//InformationalVersion").InnerText = $SemVer
+        $doc.Save($proj.FullName)
     }
 
     # build the assembly
