@@ -43,6 +43,7 @@ namespace PoshCode.Fonts.Commands
 
         protected override void EndProcessing()
         {
+            NativeMethods.PostMessage(NativeMethods.EVERYONE, NativeMethods.FONTCHANGE, 0, 0);
             base.EndProcessing();
             FontFamily.ClearCache();
         }
