@@ -4,6 +4,7 @@ using System.Linq;
 using System.Management.Automation;
 using System.Runtime.InteropServices;
 using System.Text;
+using Microsoft.PowerShell.Commands;
 using PoshCode.Fonts;
 
 using static PoshCode.ConsoleFonts.NativeMethods;
@@ -11,22 +12,23 @@ using static PoshCode.ConsoleFonts.NativeMethods;
 namespace PoshCode.ConsoleFonts.Commands
 {
     [Cmdlet(VerbsCommon.Set, "ConsoleFont", DefaultParameterSetName = "Default")]
-    public class SetConsoleFontCommand : Cmdlet
+    public class SetConsoleFontCommand : PSCmdlet
     {
         private static readonly IntPtr ConsoleOutputHandle = GetStdHandle(StandardOutputHandle);
 
         [Parameter(Mandatory = true, Position = 0, ValueFromPipeline = true, ValueFromPipelineByPropertyName = true)]
         [ArgumentCompleter(typeof(MonospaceFontNameCompleter))]
+        [ValidateNotNullOrEmpty()]
         public string Name { get; set; }
 
-        [Parameter()]
+        [Parameter(Position = 1)]
         public short Size { get; set; } = 0;
 
         [Parameter(ParameterSetName = "Default")]
         public SwitchParameter Bold
         {
-            get { return Weight >= 700; }
-            set { Weight = 700; }
+            get => Weight >= 700;
+            set => Weight = value.ToBool() ? 700 : 400;
         }
 
         [Parameter(Mandatory = true, ParameterSetName = "ManualWeight")]
@@ -39,27 +41,54 @@ namespace PoshCode.ConsoleFonts.Commands
         {
             base.ProcessRecord();
 
-            if (Name.Length > 32)
+            try
             {
-                ThrowTerminatingError(new ErrorRecord(new ArgumentOutOfRangeException("font", Name, "Console font name has a maximum length of 32 characters"), "FontNameTooLong", ErrorCategory.InvalidData, Name));
+                var path = this.SessionState.Path.GetResolvedProviderPathFromPSPath(Name, out var provider).Single();
+                if (provider.ImplementingType == typeof(FileSystemProvider))
+                {
+                    Name = path;
+                }
             }
+            catch {}
 
-            // This requires you to have the font named according to it's font name?
             if (System.IO.File.Exists(Name))
             {
-                WriteDebug($"Installing font {Name}");
+                var preExistingNames = FontFamily.All.Select(f => f.Name).ToArray();
+
+                WriteDebug($"Installing font {Name} ({preExistingNames.Length} existing)");
                 AddFontResource(Name);
                 PostMessage((IntPtr)0xffff, 0x1D); // font change
 
-                Name = System.IO.Path.GetFileNameWithoutExtension(Name).Split('-')[0];
-                Name = FontFamily.All.FirstOrDefault(family => family.Name.Contains(Name)).Name ?? Name;
+                var fontNames = FontFamily.GetFonts().Select(f => f.Name).ToArray();
+                var newNames = fontNames.Except(preExistingNames).ToArray();
+                if (newNames.Length > 0)
+                {
+                    WriteDebug($"Found {newNames.Length} new FontFamilies after installing '{Name}'!");
+                    if(newNames.Length == 1 || !newNames.Any(n => n.Contains(Name)))
+                    {
+                        Name = newNames[0];
+                    }
+                    else
+                    {
+                        Name = PickMatch(newNames, Name);
+                    }
+                } else {
+                    Name = PickMatch(fontNames, Name);
+                }
+
                 WriteVerbose($"Attempting to use font {Name}");
             }
             else
             {
-                Name = FontFamily.All.FirstOrDefault(family => family.Name.Contains(Name)).Name ?? Name;
+                Name = FontFamily.All.FirstOrDefault(family => family.Name.Contains(Name))?.Name ?? Name;
                 WriteVerbose($"Attempting to use font {Name}");
             }
+
+            if (Name.Length > 32)
+            {
+                ThrowTerminatingError(new ErrorRecord(new ArgumentOutOfRangeException("font", Name, string.Format("Console font name '{0}' is longer than the maximum length of 32 characters", Name)), "FontNameTooLong", ErrorCategory.InvalidData, Name));
+            }
+
 
             ConsoleFont before = new ConsoleFont
             {
@@ -110,6 +139,16 @@ namespace PoshCode.ConsoleFonts.Commands
                 var ex = Marshal.GetLastWin32Error();
                 ThrowTerminatingError(new ErrorRecord(new System.ComponentModel.Win32Exception(ex, "Error getting the console font"), "GetFontFailure", ErrorCategory.ReadError, Name));
             }
+        }
+
+        private static string PickMatch(string[] nameList, string name)
+        {
+            name = System.IO.Path.GetFileNameWithoutExtension(name);
+            name = nameList.FirstOrDefault(n => n.Contains(name)) ??
+                   nameList.FirstOrDefault(n => n.Contains(name.Split('-')[0])) ??
+                   nameList.FirstOrDefault(n => n.Contains(name.Split(' ')[0])) ??
+                   name;
+            return name;
         }
     }
 }

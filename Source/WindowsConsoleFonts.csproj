@@ -10,9 +10,10 @@
     <Copyright>Copyright 2018 Joel Bennett</Copyright>
     <PackageIconUrl>https://github.com/Jaykul/WindowsConsoleFonts/blob/resources/logo.png?raw=true</PackageIconUrl>
     <PackageTags>Console, Windows, Fonts</PackageTags>
-    <VersionPrefix>1.0.0</VersionPrefix>
-    <VersionSuffix>beta0007</VersionSuffix>
-    <InformationalVersion>1.0.0-beta0007+Sha.fd1f5f0bfe365d43dae7019a7f851fa412f08c46.Date.2018-11-10</InformationalVersion>
+    <VersionPrefix>1.1.0</VersionPrefix>
+    <VersionSuffix>
+    </VersionSuffix>
+    <InformationalVersion>1.1.0</InformationalVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|netstandard2.0|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>

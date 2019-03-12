@@ -25,7 +25,7 @@ namespace PoshCode.ConsoleFonts.Commands
         protected override void EndProcessing()
         {
             base.EndProcessing();
-            
+
             if (ListAvailable.ToBool())
             {
                 if (Extended.ToBool())
@@ -49,9 +49,14 @@ namespace PoshCode.ConsoleFonts.Commands
                 if (GetCurrentConsoleFontEx(ConsoleOutputHandle, true, ref info))
                 {
                     var ff = FontFamily.All.FirstOrDefault(f => f.Name == info.FontName);
+
                     if (null != ff)
                     {
-                        WriteObject(ff);
+                        var result = new PSObject(ff);
+                        result.Properties.Add(new PSNoteProperty("Size", info.FontWidth + "x" + info.FontSize));
+                        result.Properties.Add(new PSNoteProperty("Weight", info.FontWeight));
+
+                        WriteObject(result);
                     }
                     else
                     {
