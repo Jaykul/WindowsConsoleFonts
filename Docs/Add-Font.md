@@ -60,6 +60,6 @@ For more information, see about_CommonParameters (http://go.microsoft.com/fwlink
 ## NOTES
 
 ## RELATED LINKS
-Remove-Font
-Set-ConsoleFont
-Get-ConsoleFont
+[Remove-Font](Remove-Font)
+[Set-ConsoleFont](Set-ConsoleFont)
+[Get-ConsoleFont](Get-ConsoleFont)

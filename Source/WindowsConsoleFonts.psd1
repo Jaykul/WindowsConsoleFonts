@@ -1,17 +1,18 @@
 @{
     # The module version should be SemVer.org compatible
-    ModuleVersion           = '1.0.0'
+    ModuleVersion           = '1.1.0'
 
     # PrivateData is where all third-party metadata goes
     PrivateData = @{
         # PrivateData.PSData is the PowerShell Gallery data
         PSData = @{
             # Prerelease string of this module
-            Prerelease      = '-beta04'
+            Prerelease      = ''
 
             # ReleaseNotes of this module
             ReleaseNotes    = '
-            First Version for PowerShell Gallery
+            Added basic documentation for the commands.
+            Made Set-ConsoleFont detect the font name when using the path to a .ttf file
             '
 
             # Tags applied to this module. These help with module discovery in online galleries.

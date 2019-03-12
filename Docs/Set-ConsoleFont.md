@@ -1,5 +1,5 @@
 ---
-external help file: WindowsConsoleFonts.dll-Help.xml
+external help file: WindowsConsoleFonts-Help.xml
 Module Name: WindowsConsoleFonts
 online version: https://github.com/Jaykul/WindowsConsoleFonts/blob/master/Docs/Set-ConsoleFont.md
 schema: 2.0.0
@@ -14,12 +14,12 @@ Sets the font for the current console (including size and weight).
 
 ### Default (Default)
 ```
-Set-ConsoleFont [-Name] <String> [-Size <Int16>] [-Bold] [-Passthru] [<CommonParameters>]
+Set-ConsoleFont [-Name] <String> [-Size] <Int16> [-Bold] [-Passthru] [<CommonParameters>]
 ```
 
 ### ManualWeight
 ```
-Set-ConsoleFont [-Name] <String> [-Size <Int16>] -Weight <Int32> [-Passthru] [<CommonParameters>]
+Set-ConsoleFont [-Name] <String> [-Size] <Int16> -Weight <Int32> [-Passthru] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -135,3 +135,6 @@ For more information, see about_CommonParameters (http://go.microsoft.com/fwlink
 ## NOTES
 
 ## RELATED LINKS
+[Add-Font](Add-Font)
+[Remove-Font](Remove-Font)
+[Get-ConsoleFont](Get-ConsoleFont)

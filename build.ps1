@@ -22,13 +22,16 @@ try {
         $doc.Save($proj.FullName)
     }
 
-    # build the assembly
+    # build the assembly (note, the resulting assembly works in PS 6 on .NET Core
     dotnet publish -f net472 -o lib
     ### Using the old framework would require us to ship 96 extra shim files
     # dotnet publish -f net461 -o lib
 
     ## Build the actual module
-    Build-Module .\Source @PSBoundParameters
+    $ModuleInfo = Build-Module .\Source @PSBoundParameters -Passthru
+
+    ## Build the help files
+    New-ExternalHelp -OutputPath (Join-Path $ModuleInfo.ModuleBase "en") -Path .\Docs
 } finally {
     Pop-Location -StackName BuildWindowsConsoleFont
 }

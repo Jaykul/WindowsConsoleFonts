@@ -1,5 +1,5 @@
 ---
-external help file: WindowsConsoleFonts.dll-Help.xml
+external help file: WindowsConsoleFonts-Help.xml
 Module Name: WindowsConsoleFonts
 online version: https://github.com/Jaykul/WindowsConsoleFonts/blob/master/Docs/Remove-Font.md
 schema: 2.0.0
@@ -59,6 +59,7 @@ For more information, see about_CommonParameters (http://go.microsoft.com/fwlink
 ## NOTES
 
 ## RELATED LINKS
-Add-Font
-Set-ConsoleFont
-Get-ConsoleFont
+[Add-Font](Add-Font)
+[Set-ConsoleFont](Set-ConsoleFont)
+[Get-ConsoleFont](Get-ConsoleFont)
+
